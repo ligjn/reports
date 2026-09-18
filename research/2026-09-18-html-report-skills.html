@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML 报告 Skills 调研：PPT 与 Markdown 的替代方案</title>
+<meta name="description" content="2026-09-18 对 GitHub 社区 HTML 报告类 agent skills 的调研结论、目录分组设计与选型建议。">
+<meta property="og:title" content="HTML 报告 Skills 调研（2026-09-18）">
+<meta property="og:description" content="GitHub 社区 HTML 报告类 agent skills 调研结论与选型建议。">
+<meta property="og:type" content="article">
+<style>
+  :root{--fg:#1c1c1e;--muted:#6e6e73;--line:#e6e6e9;--bg:#fff;--card:#f6f6f8;--accent:#0a66d0;--good:#1a7f37;--warn:#b25000;}
+  @media (prefers-color-scheme: dark){
+    :root{--fg:#e9e9ec;--muted:#9b9ba1;--line:#2c2c30;--bg:#131316;--card:#1d1d21;--accent:#6cb2ff;--good:#4cc38a;--warn:#f0a35c;}
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.75 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif}
+  main{max-width:760px;margin:0 auto;padding:56px 22px 80px}
+  .kicker{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  h1{font-size:30px;line-height:1.3;margin:8px 0 10px}
+  .meta{color:var(--muted);font-size:14px;margin-bottom:36px}
+  h2{font-size:21px;margin:44px 0 12px;padding-top:18px;border-top:1px solid var(--line)}
+  h2:first-of-type{border-top:none;padding-top:0}
+  table{width:100%;border-collapse:collapse;font-size:14.5px;margin:14px 0}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--muted);font-weight:600;font-size:13px}
+  tbody tr:hover{background:var(--card)}
+  code{font:13px/1.6 ui-monospace,SF Mono,Menlo,monospace;background:var(--card);padding:2px 6px;border-radius:5px}
+  pre{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto}
+  pre code{background:none;padding:0}
+  .cards{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:16px 0}
+  @media (max-width:640px){.cards{grid-template-columns:1fr}}
+  .card{background:var(--card);border-radius:12px;padding:16px 18px}
+  .card h3{margin:0 0 6px;font-size:16px}
+  .card p{margin:0;font-size:13.5px;color:var(--muted)}
+  .tag{display:inline-block;font-size:12px;font-weight:600;color:var(--accent);border:1px solid var(--accent);border-radius:99px;padding:1px 9px;margin:8px 6px 0 0}
+  .callout{border-left:3px solid var(--accent);background:var(--card);border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0;font-size:15px}
+  .svgwrap{margin:10px 0 4px}
+  .svgwrap svg{width:100%;height:auto;display:block}
+  footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+  @media print{.noprint{display:none}main{padding:0}}
+</style>
+</head>
+<body>
+<main>
+  <div class="kicker">Research · Agent Skills</div>
+  <h1>HTML 报告 Skills 调研：替代 PPT 与 Markdown 的展示方案</h1>
+  <div class="meta">2026-09-18 · 数据截至当日 GitHub star 数 · 本页即首个试点：由 pages-publish skill 发布</div>
+
+  <h2 id="tldr">TL;DR</h2>
+  <p>结论：GitHub 社区（尤其中文社区）已经形成成熟的「HTML 报告 / 网页 PPT」agent skill 生态，可以系统性地替代 PPT 与 Markdown 文档作为展示载体。最终采用 <strong>三件套组合</strong>，覆盖「生成 → 设计 → 发布」全链路：</p>
+  <div class="cards">
+    <div class="card"><h3>huashu-data-pro</h3><p>数据分析默认产出交互式 HTML 报告（ECharts + PDF 导出），内置「数据不说谎」设计规范。</p><span class="tag">数据报告</span></div>
+    <div class="card"><h3>guizang-ppt-skill</h3><p>单文件 HTML 横向翻页 PPT，电子杂志 / 瑞士国际主义双视觉系统，32 种锁定版式。</p><span class="tag">演示 deck</span></div>
+    <div class="card"><h3>pages-publish（自研）</h3><p>从 voidful/claude-html-report-skill 只抽取发布能力：一键发布 GitHub Pages 并返回公网 URL，支持多项目分组。</p><span class="tag">发布分发</span></div>
+    <div class="card"><h3>frontend-design + theme-factory</h3><p>官方 anthropics/skills，作为任意 HTML 产出的设计质量兜底。</p><span class="tag">设计兜底</span></div>
+  </div>
+
+  <h2 id="stars">候选仓库热度对比</h2>
+  <p>社区头部是歸藏的 guizang-ppt-skill（26.5k star，真格 / 360 / Kimi work 赞助），已是网页 PPT 的事实标准。下图纵轴为 GitHub star 数（<strong>对数刻度</strong>，2026-09-18 采集）：</p>
+  <div class="svgwrap">
+    <svg viewBox="0 0 680 190" role="img" aria-label="各仓库 star 数对比，对数刻度">
+      <g font-size="12">
+        <g transform="translate(0,18)">
+          <rect x="150" y="0" width="500" height="16" rx="3" fill="#0a66d0" opacity="0.9"/>
+          <text x="0" y="12">guizang-ppt-skill</text><text x="142" y="12" text-anchor="end" opacity="0.75">26,526</text>
+        </g>
+        <g transform="translate(0,52)">
+          <rect x="150" y="0" width="380" height="16" rx="3" fill="#0a66d0" opacity="0.72"/>
+          <text x="0" y="12">huashu-skills</text><text x="142" y="12" text-anchor="end" opacity="0.75">1,563</text>
+        </g>
+        <g transform="translate(0,86)">
+          <rect x="150" y="0" width="294" height="16" rx="3" fill="#0a66d0" opacity="0.56"/>
+          <text x="0" y="12">ncu-report-skill</text><text x="142" y="12" text-anchor="end" opacity="0.75">232</text>
+        </g>
+        <g transform="translate(0,120)">
+          <rect x="150" y="0" width="238" height="16" rx="3" fill="#0a66d0" opacity="0.42"/>
+          <text x="0" y="12">ppt-report-skills</text><text x="142" y="12" text-anchor="end" opacity="0.75">81</text>
+        </g>
+        <g transform="translate(0,154)">
+          <rect x="150" y="0" width="176" height="16" rx="3" fill="#0a66d0" opacity="0.3"/>
+          <text x="0" y="12">claude-html-report-skill</text><text x="142" y="12" text-anchor="end" opacity="0.75">19</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+
+  <h2 id="detail">分场景结论</h2>
+  <table>
+    <thead><tr><th>场景</th><th>选择</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>正式数据报告（评测 / 归因分析）</td><td><code>huashu-data-pro</code></td><td>交互式 HTML 报告默认输出；「数据不说谎」规范（Y 轴从 0 起、禁 CDN 依赖防离线截图白屏、颜色语义化）与既有报告规范同频。</td></tr>
+      <tr><td>幻灯片式逐页讲解的数据报告</td><td><code>ppt-report-skills</code></td><td>一页 3 小文件、Excel/CSV 数据与渲染分离，改数不重画图；9 模板 + 5 主题 + 一键 PDF。</td></tr>
+      <tr><td>对外汇报 / 分享演示</td><td><code>guizang-ppt-skill</code></td><td>单文件横向翻页 deck，演讲者模式与排练内置；线下投屏可配 <code>html-to-ppt-pdf</code> 转图片型 PDF 兜底。</td></tr>
+      <tr><td>调研类文档想拿公网链接</td><td><code>pages-publish</code></td><td>任意单文件 HTML 一键发布 GitHub Pages，多项目目录分组，URL 稳定可修订重发。</td></tr>
+      <tr><td>设计质量不满意时</td><td><code>frontend-design</code> + <code>theme-factory</code></td><td>官方设计规范与 10 套主题叠加使用。</td></tr>
+    </tbody>
+  </table>
+
+  <h2 id="structure">本站目录设计（多项目管理）</h2>
+  <p>站点采用「单仓库、URL 即分组」结构：每个项目一个目录，个人杂项进 <code>misc</code>；发布时自动重建按项目分组的索引页与 <code>manifest.json</code> 清单，同日同 slug 重发覆盖旧版，URL 保持稳定。</p>
+  <pre><code>ligjn/reports（Pages 站点）
+├── index.html          # 按项目分组的目录页（自动生成）
+├── manifest.json       # 全量清单：project / file / title / date / description
+├── research/           # 调研与实验
+├── &lt;project&gt;/          # 各业务项目，一个项目一个目录
+└── misc/               # 无项目归属的个人内容（默认分组）</code></pre>
+
+  <h2 id="install">安装方式</h2>
+  <pre><code># 生成类：clone 进用户 skill 目录即可被 agent 识别
+git clone --depth 1 https://github.com/op7418/guizang-ppt-skill ~/.agents/skills/guizang-ppt-skill
+# huashu-data-pro 从 52-skill 集合中按需抽取（本文只装子集）
+# pages-publish：自研，位于 ~/.agents/skills/pages-publish/
+python3 ~/.agents/skills/pages-publish/scripts/pages_publish.py init --repo ligjn/reports --public
+python3 ~/.agents/skills/pages-publish/scripts/pages_publish.py publish report.html "标题" --project research --slug my-report</code></pre>
+
+  <div class="callout">已知限制：<code>*.github.io</code> 在国内网络访问可能不稳定；发布通道在 git 直连失败时会自动回退到 GitHub Contents API 直传（本页首次发布即走了该通道）。</div>
+
+  <footer>生成：ZCode · pages-publish skill · 数据采集于 2026-09-18</footer>
+</main>
+</body>
+</html>
